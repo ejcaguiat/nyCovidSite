@@ -1,8 +1,19 @@
 {% load static %}
 
 <html>
-    {% for item in items %}
-        <h1>{{ item.date }}</h1>
-    {% endfor %}
-    <h2>test</h2>
+    <table style="width:100%">
+        <tr>
+          <th>date</th>
+                {{ items.0.date }}
+          <th>Positive Cases</th>
+          {% for item in items %}
+                <td>{{ item.positive | linebreaksbr }}</td>
+          {% endfor %}
+          <th>Negative Cases</th>
+          <th>Recovered Cases</th>
+          <th>Total Cases</th>
+        </tr>
+        <tr>
+        </tr>
+    </table>
 </html>
