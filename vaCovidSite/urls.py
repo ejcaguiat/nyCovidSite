@@ -21,4 +21,6 @@ urlpatterns = [
     path('', views.index, name='index'),
     path('website/', include('website.urls')),
     path('admin/', admin.site.urls),
+    path('adv_metrics/', views.adv_metrics, name='adv_metrics'),
+    path('compare_by_state/', views.compare_by_state, name='compare_by_state')
 ]

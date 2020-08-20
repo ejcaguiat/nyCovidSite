@@ -1,19 +1,56 @@
 {% load static %}
-
+<!DOCTYPE HTML>
 <html>
-    <table style="width:100%">
-        <tr>
-          <th>date</th>
-                {{ items.0.date }}
-          <th>Positive Cases</th>
-          {% for item in items %}
-                <td>{{ item.positive | linebreaksbr }}</td>
-          {% endfor %}
-          <th>Negative Cases</th>
-          <th>Recovered Cases</th>
-          <th>Total Cases</th>
-        </tr>
-        <tr>
-        </tr>
-    </table>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>VA Covid Tracker</title>
+
+    <!---Bootstrap --->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+  </head>
+<body>
+<!--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+  <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">VA Covid Status</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+  
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav mr-auto">
+        <li class="nav-item active">
+          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="/adv_metrics">Advanced Metrics</a>
+        </li>
+
+        <li class="nav-item">
+          <a class="nav-link" href="/compare_by_state">Compare by State</a>
+        </li>
+      </ul>
+      <form class="form-inline my-2 my-lg-0">
+        <a class="nav-link" href="#">Contact</a>
+      </form>
+    </div>
+  </nav>
+<!---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
+  
+  <div class="container p-3 my-3 bg-dark text-white">
+    <h1 style="text-align: center;">Welcome to the VA Covid Tracking site</h1>
+    <p style="text-align: center;">Using the covidtracking API, this website shows covid cases that the state of Virginia has. Last update: {{ cases.0.date }}</p>
+  </div>
+
+  <div style = "text-align: center;">
+    <p>New Cases: {{cases.0.positiveIncrease}}</p>
+    <p>Total Cases: {{cases.0.positive}}</p>
+    <p>New deaths: {{cases.0.deathIncrease}}</p>
+    <p>Total deaths: {{cases.0.death}}</p>
+  </div>
+
+</body>
 </html>
