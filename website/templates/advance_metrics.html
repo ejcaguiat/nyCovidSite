@@ -4,18 +4,39 @@
 {% block content %}
 <html>
   <head>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
   </head>
   <body>
-  <canvas id="myChart" width="400" height="400" onclick = "createChart()"></canvas>
+  <canvas id="myChart" width="500" height="500" style = "width: 500px; height:500px;"></canvas>
     <script type="text/javascript">
-        function createChart(){
-          var a = "{{listPositive}}";
-          var iterator = a.values();
-          for(let elements of iterator){
-            console.log(elements);  
-          }
-        }
+        var posNum = {{listPositive}};
+        var posDate = {{listDates|safe}};
+        posNum = posNum.reverse();
+        posDate = posDate.reverse();
+        var ctx = document.getElementById('myChart').getContext('2d');
+        var chart = new Chart(ctx, {
+          // The type of chart we want to create
+          type: 'line',
+
+          // The data for our dataset
+          data: {
+              labels: posDate,
+              datasets: [{
+                  label: 'My First dataset',
+                  backgroundColor: 'rgb(255, 99, 132)',
+                  borderColor: 'rgb(255, 99, 132)',
+                  data: posNum
+              }]
+          },
+
+          // Configuration options go here
+          options: {}
+       });
+
       
     </script>
     <table class="table">

@@ -62,12 +62,17 @@ def adv_metrics(request):
 
     #Separating the cases into a list
     listCases = []
+    listDate = []
     for case in data:
-        listCases.append(case['positive'])
+        listCases.append(case['positiveIncrease'])
+        listDate.append(case['date'])
 
+    listCases = json.dumps(listCases)
+    listDate = json.dumps(listDate)
     context = {
         'cases': data,
         'listPositive': listCases,
+        'listDates': listDate,
     }
     return render(request, 'advance_metrics.html', context)
 
