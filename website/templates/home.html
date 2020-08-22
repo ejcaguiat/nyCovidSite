@@ -1,5 +1,8 @@
+{% extends 'navbar.html' %}
 {% load static %}
-<!DOCTYPE HTML>
+<!DOCTYPE html>
+
+{% block content %}
 <html>
   <head>
     <meta charset="utf-8">
@@ -11,46 +14,173 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+    <style>
+      *{
+        margin:0;
+        padding:0;
+        box-sizing:border-box;
+      }
+      html{
+        background-color:rgb(63, 58, 58);
+      }
+      .container{
+        margin: 20px auto;
+        width:400px;
+        height:400px;
+        background-color:#fff;
+        display:grid;
+        grid-template-columns: 200px 200px;
+        grid-row: auto auto;
+        grid-column-gap: 20px;
+        grid-row-gap: 20px;
+      }
+      .box{
+          background-color: #333;
+          padding: 40px;
+          border-radius: 10px;
+          color: #fff;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          font-size:  30px;
+          font-family: sans-serif;
+      }
+    .popup .overlay {
+      position:fixed;
+      top:0px;
+      left:0px;
+      width:100vw;
+      height:100vh;
+      background:rgba(0,0,0,0.7);
+      z-index:1;
+      display:none;
+    }
+
+    .popup .content {
+      position:absolute;
+      top:50%;
+      left:50%;
+      transform:translate(-50%,-50%) scale(0);
+      background:#fff;
+      width:500px;
+      height:250px;
+      z-index:2;
+      text-align:center;
+      padding:20px;
+      box-sizing:border-box;
+      font-family:"Open Sans",sans-serif;
+    }
+
+    .popup .close-btn {
+      cursor:pointer;
+      position:absolute;
+      right:20px;
+      top:20px;
+      width:30px;
+      height:30px;
+      background:#222;
+      color:#fff;
+      font-size:25px;
+      font-weight:600;
+      line-height:30px;
+      text-align:center;
+      border-radius:50%;
+    }
+
+    .popup.active .overlay {
+      display:block;
+    }
+
+    .popup.active .content {
+      transition:all 300ms ease-in-out;
+      transform:translate(-50%,-50%) scale(1);
+    }
+
+      
+    </style>
+
+    <script>
+      function toggleNewPopup(){
+        document.getElementById("popup-new").classList.toggle("active");
+      }
+
+      function toggleDeathPopup(){
+        document.getElementById("popup-deaths").classList.toggle("active");
+      }
+
+      function toggleHospPopup(){
+        document.getElementById("popup-hosp").classList.toggle("active");
+      }
+
+      function toggleHospPopup(){
+        document.getElementById("popup-hosp").classList.toggle("active");
+      }
+
+      function toggleRecPopup(){
+        document.getElementById("popup-rec").classList.toggle("active");
+      }
+    </script>
   </head>
 <body>
-<!--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-  <nav class="navbar navbar-expand-lg navbar-light bg-light">
-    <a class="navbar-brand" href="#">VA Covid Status</a>
-    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
-  
-    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-      <ul class="navbar-nav mr-auto">
-        <li class="nav-item active">
-          <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/adv_metrics">Advanced Metrics</a>
-        </li>
-
-        <li class="nav-item">
-          <a class="nav-link" href="/compare_by_state">Compare by State</a>
-        </li>
-      </ul>
-      <form class="form-inline my-2 my-lg-0">
-        <a class="nav-link" href="#">Contact</a>
-      </form>
+  <h6>*This website tracks the covid cases in the state of New York. Updated daily by 5PM EST.</h6>
+  <div class="popup" id="popup-new">
+    <div class="overlay"></div>
+    <div class="content">
+      <div class="close-btn" onclick="toggleNewPopup()">&times;</div>
+      <h2>Cases in NY</h2>
+      <p>Numbers as of {{cases.0.date}}:</p>
+      <p>New Cases: {{cases.0.positiveIncrease}}</p>
+      <p>Max cases in a day: {{maxI.positiveIncrease}} ({{maxI.date}})</p>
+      <p>Min cases in a day: {{minI.positiveIncrease}} ({{minI.date}})</p>      
     </div>
-  </nav>
-<!---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------->
-  
-  <div class="container p-3 my-3 bg-dark text-white">
-    <h1 style="text-align: center;">Welcome to the VA Covid Tracking site</h1>
-    <p style="text-align: center;">Using the covidtracking API, this website shows covid cases that the state of Virginia has. Last update: {{ cases.0.date }}</p>
   </div>
 
-  <div style = "text-align: center;">
-    <p>New Cases: {{cases.0.positiveIncrease}}</p>
-    <p>Total Cases: {{cases.0.positive}}</p>
-    <p>New deaths: {{cases.0.deathIncrease}}</p>
-    <p>Total deaths: {{cases.0.death}}</p>
+  <div class="popup" id="popup-deaths">
+    <div class="overlay"></div>
+    <div class="content">
+      <div class="close-btn" onclick="toggleDeathPopup()">&times;</div>
+      <h2>Deaths in NY</h2>
+      <p>Numbers as of {{cases.0.date}}:</p>
+      <p>New Cases: {{cases.0.deathIncrease}}</p>
+      <p>Max deaths in a day: {{maxD.deathIncrease}} ({{maxD.date}})</p>
+      <p>Min deaths in a day: {{minD.deathIncrease}} ({{minD.date}})</p>      
+    </div>
+  </div>
+
+  <div class="popup" id="popup-hosp">
+    <div class="overlay"></div>
+    <div class="content">
+      <div class="close-btn" onclick="toggleHospPopup()">&times;</div>
+      <h2>Hospitalized in NY</h2>
+      <p>Numbers as of {{cases.0.date}}:</p>
+      <p>Hospitalized Currently: {{cases.0.hospitalizedCurrently}}</p>
+      <p>Total Hospitalized Cases: {{cases.0.hospitalizedCumulative}}</p>
+      <p>In ICU Currently: {{cases.0.inIcuCurrently}}</p>     
+      <p>On Ventilator Currently: {{cases.0.onVentilatorCurrently}}</p>     
+    </div>
+  </div>
+
+  <div class="popup" id="popup-rec">
+    <div class="overlay"></div>
+    <div class="content">
+      <div class="close-btn" onclick="toggleRecPopup()">&times;</div>
+      <h2>Recoveries in NY</h2>
+      <p>Numbers as of {{cases.0.date}}:</p>
+      <!---<p>Recoveries Today: </p>--->
+      <p>Total Recoveries: {{cases.0.recovered}}</p>
+      <p>Negative Tests Today: {{cases.0.negativeIncrease}}</p>     
+      <p>Negative Tests Total: {{cases.0.negative}}</p>     
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="box" onclick = "toggleNewPopup()" style = "cursor: pointer;">New Cases: {{cases.0.positiveIncrease}}</div>
+    <div class="box" onclick = "toggleDeathPopup()" style = "cursor: pointer;">Deaths: {{cases.0.deathIncrease}}</div>
+    <div class="box" onclick = "toggleHospPopup()" style = "cursor: pointer;">Hospitalized Currently: {{cases.0.hospitalizedCurrently}}</div>
+    <div class="box" onclick = "toggleRecPopup()" style = "cursor: pointer;">Recoveries: {{cases.0.recovered}}</div>
   </div>
 
 </body>
 </html>
+{% endblock %}

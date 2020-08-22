@@ -1,21 +1,79 @@
+{% extends 'navbar.html' %}
 {% load static %}
-<table class="table">
-    <thead>
-      <tr>
-        <th scope="col">#</th>
-        <th scope="col">First</th>
-        <th scope="col">Last</th>
-        <th scope="col">Handle</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for case in cases %}
+
+{% block content %}
+<html>
+  <head>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+  </head>
+  <body>
+  <canvas id="myChart" width="400" height="400" onclick = "createChart()"></canvas>
+    <script type="text/javascript">
+        function createChart(){
+          var a = "{{listPositive}}";
+          var iterator = a.values();
+          for(let elements of iterator){
+            console.log(elements);  
+          }
+        }
+      
+    </script>
+    <table class="table">
+      <thead>
         <tr>
-            <th scope="row">{{ forloop.counter }}</th>
-            <td>{{case.date}}</td>
-            <td>Otto</td>
-            <td>@mdo</td>
+          <th scope="col">Date</th>
+          <th scope="col">Positive Cases</th>
+          <th scope="col">Deaths</th>
+          <th scope="col">Hospitalized</th>
+          <th scope="col">Total Recoveries</th>
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {% for case in cases %}
+          <tr>
+              <th scope="row">{{case.date}}</th>
+              <td>{{case.positive}}
+                {% if case.positiveIncrease > 0 and case.positiveIncrease < 700 %}
+                  <small style = "color: yellow;">↑{{case.positiveIncrease}}</small>
+                {% elif case.positiveIncrease >= 700 and case.positiveIncrease < 2500 %}
+                  <small style = "color: orange">↑{{case.positiveIncrease}}</small>
+                {% elif case.positiveIncrease >= 2500 and case.positiveIncrease < 5000 %}
+                  <small style = "color: orangered">↑{{case.positiveIncrease}}</small>
+                {% elif case.positiveIncrease >= 5000 %}
+                  <small style = "color: red">↑{{case.positiveIncrease}}</small>
+                {% else %}
+                  <small style = "color: grey">={{case.positiveIncrease}}</small>
+                {% endif %}
+              </td>
+              <td>{{case.death}}
+                {% if case.hospInc > 0 %}                
+                <small style = "color:red;">↑{{case.hospInc}}</small>
+                {% elif case.hospInc < 0 %}
+                <small style = "color:green;">↓{{case.hospInc}}</small>
+                {% else %}
+                <small style = "color:grey;">={{case.hospInc}}</small>
+                {% endif %}
+              </td>
+              <td>{{case.hospitalizedCurrently}}
+                {% if case.hospInc > 0 %}
+                <small style = "color:red;">↑{{case.hospInc}}</small>
+                {% elif case.hospInc < 0 %}
+                <small style = "color:green;">↓{{case.hospInc}}</small>
+                {% else %}
+                <small style = "color:grey;">={{case.hospInc}}</small>
+                {% endif %}
+              </td>
+              <td>{{case.recovered}}
+                {% if case.recoveryIncrease > 0 %}
+                <small style = "color:green;">↑{{case.recoveryIncrease}}</small>
+                {% else %}
+                <small style = "color:grey;">={{case.recoveryIncrease}}</small>
+                {% endif %}
+              </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </body>
+</html>
+{% endblock %}
