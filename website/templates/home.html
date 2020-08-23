@@ -14,6 +14,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
 
     <style>
       *{
@@ -21,9 +22,7 @@
         padding:0;
         box-sizing:border-box;
       }
-      html{
-        background-color:rgb(63, 58, 58);
-      }
+      
       .container{
         margin: 20px auto;
         width:400px;
@@ -70,6 +69,7 @@
       padding:20px;
       box-sizing:border-box;
       font-family:"Open Sans",sans-serif;
+      border-radius: 2%;
     }
 
     .popup .close-btn {
@@ -99,8 +99,108 @@
 
       
     </style>
+  </head>
+<body>
+  <h6>*This website tracks the covid cases in the state of New York. Updated daily by 5PM EST.</h6>
+  <canvas id="dailyCaseChart" width="660" height="300" onclick="toggleNewPopup()" style = "cursor: pointer; float: left;"></canvas>
+  <canvas id="dailyDeathChart" width="660" height="300" onclick="toggleDeathPopup()" style = "cursor: pointer; float: right;"></canvas>
+  <canvas id="dailyHospChart" width="660" height="300" onclick="toggleHospPopup()" style = "cursor: pointer; float: left;"></canvas>
+  <canvas id="dailyRecChart" width="660" height="300" onclick="toggleRecPopup()" style = "cursor: pointer; float: right;"></canvas>
+  <script type="text/javascript">
+      var posNum = {{listPositive}};
+      var posDate = {{listDates|safe}};
+      var posDeath = {{listDeaths}};
+      var posHosp = {{listHosp}};
+      var posRec = {{listRec}};
+      posRec.reverse();
+      posHosp.reverse();
+      posDeath.reverse();
+      posNum.reverse();
+      posDate.reverse();
+      var newC = document.getElementById('dailyCaseChart').getContext('2d');
+      var newD = document.getElementById('dailyDeathChart').getContext('2d');
+      var newH = document.getElementById('dailyHospChart').getContext('2d');
+      var newR = document.getElementById('dailyRecChart').getContext('2d');
+      var newCasesChart = new Chart(newC, {
+        // The type of chart we want to create
+        type: 'line',
 
-    <script>
+        // The data for our dataset
+        data: {
+            labels: posDate,
+            datasets: [{
+                label: 'Daily Cases',
+                borderColor: 'red',
+                data: posNum
+            }]
+        },
+
+        // Configuration options go here
+        options: {
+          responsive: false
+        }
+      });
+
+      var newDeathChart = new Chart(newD, {
+        // The type of chart we want to create
+        type: 'line',
+
+        // The data for our dataset
+        data: {
+            labels: posDate,
+            datasets: [{
+                label: 'Daily Deaths',
+                borderColor: 'black',
+                data: posDeath
+            }]
+        },
+
+        // Configuration options go here
+        options: {
+          responsive: false
+        }
+      });
+      
+      var newHospChart = new Chart(newH, {
+          // The type of chart we want to create
+          type: 'line',
+
+          // The data for our dataset
+          data: {
+              labels: posDate,
+              datasets: [{
+                  label: 'Daily Hospitalizations',
+                  borderColor: 'yellow',
+                  data: posHosp
+              }]
+          },
+
+          // Configuration options go here
+          options: {
+            responsive: false
+          }
+      });
+
+      var newRecChart = new Chart(newR, {
+        // The type of chart we want to create
+        type: 'line',
+
+        // The data for our dataset
+        data: {
+            labels: posDate,
+            datasets: [{
+                label: 'Total Recoveries',
+                borderColor: 'green',
+                data: posRec
+            }]
+        },
+
+        // Configuration options go here
+        options: {
+          responsive: false
+        }
+      });
+
       function toggleNewPopup(){
         document.getElementById("popup-new").classList.toggle("active");
       }
@@ -120,10 +220,8 @@
       function toggleRecPopup(){
         document.getElementById("popup-rec").classList.toggle("active");
       }
-    </script>
-  </head>
-<body>
-  <h6>*This website tracks the covid cases in the state of New York. Updated daily by 5PM EST.</h6>
+      
+  </script>
   <div class="popup" id="popup-new">
     <div class="overlay"></div>
     <div class="content">
@@ -131,8 +229,8 @@
       <h2>Cases in NY</h2>
       <p>Numbers as of {{cases.0.date}}:</p>
       <p>New Cases: {{cases.0.positiveIncrease}}</p>
-      <p>Max cases in a day: {{maxI.positiveIncrease}} ({{maxI.date}})</p>
-      <p>Min cases in a day: {{minI.positiveIncrease}} ({{minI.date}})</p>      
+      <p>Max cases in a day: {{extremeNumbers.0.positiveIncrease}} ({{extremeNumbers.0.date}})</p>
+      <p>Min cases in a day: {{extremeNumbers.1.positiveIncrease}} ({{extremeNumbers.1.date}})</p>      
     </div>
   </div>
 
@@ -143,8 +241,8 @@
       <h2>Deaths in NY</h2>
       <p>Numbers as of {{cases.0.date}}:</p>
       <p>New Cases: {{cases.0.deathIncrease}}</p>
-      <p>Max deaths in a day: {{maxD.deathIncrease}} ({{maxD.date}})</p>
-      <p>Min deaths in a day: {{minD.deathIncrease}} ({{minD.date}})</p>      
+      <p>Max deaths in a day: {{extremeNumbers.2.deathIncrease}} ({{extremeNumbers.2.date}})</p>
+      <p>Min deaths in a day: {{extremeNumbers.3.deathIncrease}} ({{extremeNumbers.3.date}})</p>      
     </div>
   </div>
 
@@ -173,14 +271,6 @@
       <p>Negative Tests Total: {{cases.0.negative}}</p>     
     </div>
   </div>
-
-  <div class="container">
-    <div class="box" onclick = "toggleNewPopup()" style = "cursor: pointer;">New Cases: {{cases.0.positiveIncrease}}</div>
-    <div class="box" onclick = "toggleDeathPopup()" style = "cursor: pointer;">Deaths: {{cases.0.deathIncrease}}</div>
-    <div class="box" onclick = "toggleHospPopup()" style = "cursor: pointer;">Hospitalized Currently: {{cases.0.hospitalizedCurrently}}</div>
-    <div class="box" onclick = "toggleRecPopup()" style = "cursor: pointer;">Recoveries: {{cases.0.recovered}}</div>
-  </div>
-
 </body>
 </html>
 {% endblock %}

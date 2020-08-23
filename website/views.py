@@ -34,20 +34,38 @@ for datum in data:
 
 def index(request):
     #Gets minimum and max increase in cases
-    maxIncrease = max(data, key=lambda ev: ev['positiveIncrease'])
-    minIncrease = min(data, key=lambda ev: ev['positiveIncrease'])
+    extremeNumbers = []
+    extremeNumbers.append(max(data, key=lambda ev: ev['positiveIncrease']))
+    extremeNumbers.append(min(data, key=lambda ev: ev['positiveIncrease']))
+    extremeNumbers.append(max(data, key=lambda ev: ev['deathIncrease']))
+    extremeNumbers.append(min(data, key=lambda ev: ev['deathIncrease']))
+    
+    listCases = []
+    listDate = []
+    listDeath = []
+    listHosp = []
+    listRec = []
+    for case in data:
+        listCases.append(case['positiveIncrease'])
+        listDate.append(case['date'])
+        listDeath.append(case['deathIncrease'])
+        listHosp.append(case['hospitalizedCurrently'])
+        listRec.append(case['recovered'])
 
-    #Gets minimum and max increase in deaths
-    maxDeath = max(data, key=lambda ev: ev['deathIncrease'])
-    minDeath = min(data, key=lambda ev: ev['deathIncrease'])
- 
+    listCases = json.dumps(listCases)
+    listDate = json.dumps(listDate)
+    listDeath = json.dumps(listDeath)
+    listHosp = json.dumps(listHosp)
+    listRec = json.dumps(listRec)
 
     context = {
-        'maxD': maxDeath,
-        'minD': minDeath,
-        'minI': minIncrease,
-        'maxI': maxIncrease,
+        'extremeNumbers': extremeNumbers,
         'cases': data,
+        'listPositive': listCases,
+        'listDates': listDate,
+        'listDeaths': listDeath,
+        'listHosp': listHosp,
+        'listRec': listRec
     }
     return render(request, 'home.html', context)
 
@@ -61,18 +79,8 @@ def adv_metrics(request):
         
 
     #Separating the cases into a list
-    listCases = []
-    listDate = []
-    for case in data:
-        listCases.append(case['positiveIncrease'])
-        listDate.append(case['date'])
-
-    listCases = json.dumps(listCases)
-    listDate = json.dumps(listDate)
     context = {
-        'cases': data,
-        'listPositive': listCases,
-        'listDates': listDate,
+        'cases': data, 
     }
     return render(request, 'advance_metrics.html', context)
 
