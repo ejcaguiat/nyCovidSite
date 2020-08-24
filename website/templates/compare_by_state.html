@@ -1,0 +1,104 @@
+{% extends 'navbar.html' %}
+{% load static %}
+<!DOCTYPE html>
+
+{% block content %}
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+        <title>NY Covid Tracker: Compare by State</title>
+    
+        <!---Bootstrap --->
+        <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+        <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    
+    </head>
+
+    <body>
+        <div>
+            <form action="/compare_by_state/" method="post">
+            {% csrf_token %}
+            <select id="dropdown" name="dropdown">
+                <option value="" disabled="disabled" selected="selected">Compare a state</option>
+                <option value="al">Alabama - AL</option>
+                <option value="ak">Alaska - AK</option>
+                <option value="az">Arizona - AZ</option>
+                <option value="ar">Arkansas - AR</option>
+                <option value="ca">California - CA</option>
+                <option value="co">Colorado - CO</option>
+                <option value="ct">Connecticut - CT</option>
+                <option value="de">Delaware - DE</option>
+                <option value="fl">Florida - FL</option>
+                <option value="ga">Georgia - GA</option>
+                <option value="hi">Hawaii - HI</option>
+                <option value="id">Idaho - ID</option>
+                <option value="il">Illinois - IL</option>
+                <option value="in">Indiana - IN</option>
+                <option value="ia">Iowa - IA</option>
+                <option value="ks">Kansas - KS</option>
+                <option value="ky">Kentucky - KY</option>
+                <option value="la">Louisiana - LA</option>
+                <option value="me">Maine - ME</option>
+                <option value="md">Maryland - MD</option>
+                <option value="ma">Massachusetts - MA</option>
+                <option value="mi">Michigan - MI</option>
+                <option value="mn">Minnesota - MN</option>
+                <option value="ms">Mississippi - MS</option>
+                <option value="mo">Missouri - MO</option>
+                <option value="mt">Montana - MT</option>
+                <option value="ne">Nebraska - NE</option>
+                <option value="nv">Nevada - NV</option>
+                <option value="nh">New Hampshire - NH</option>
+                <option value="nj">New Jersey - NJ</option>
+                <option value="nm">New Mexico - NM</option>
+                <option value="nc">North Carolina - NC</option>
+                <option value="nd">North Dakota - ND</option>
+                <option value="oh">Ohio - OH</option>
+                <option value="ok">Oklahoma - OK</option>
+                <option value="or">Oregon - OR</option>
+                <option value="pa">Pennsylvania - PA</option>
+                <option value="ri">Rhode Island - RI</option>
+                <option value="sc">South Carolina - SC</option>
+                <option value="sd">South Dakota - SD</option>
+                <option value="tn">Tennessee - TN</option>
+                <option value="tx">Texas - TX</option>
+                <option value="ut">Utah - UT</option>
+                <option value="vt">Vermont - VT</option>
+                <option value="va">Virginia - VA</option>
+                <option value="wa">Washington - WA</option>
+                <option value="wv">West Virginia WV</option>
+                <option value="wi">Wisconsin - WI</option>
+                <option value="wy">Wyoming - WY</option>
+            </select>
+            <input class="btn btn-primary" type="submit" value="submit">
+            </form>
+        </div>
+
+        <table class="table">
+            <thead>
+              <tr>
+                <th scope="col"></th>
+                <th scope="col">NY</th>
+                <th scope="col">{{comparedData.0.state}}</th>
+                <th scope="col">Comparison</th>
+              </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope = "row">Positive Cases</th>
+                    <td>{{cases.0.positive}}</td>
+                    <td>{{comparedData.0.positive}}</td>
+                    {% if cases.0.positive > comparedData.0.positive %}
+                        <td style = "color: green;">↑{{differences.0}}</td>
+                    {% else %}
+                        <td style = "color: red">↓{{differences.0}}</td>
+                    {% endif %}
+                </tr>
+            </tbody>
+    </body>
+</html>
+{% endblock %}

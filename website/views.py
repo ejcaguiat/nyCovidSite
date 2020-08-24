@@ -15,7 +15,7 @@ data = json.loads(content)
 for datum in data:
     oldFormat = str(datum['date'])
     datetimeobject = datetime.strptime(oldFormat, '%Y%m%d')
-    newFormat = datetimeobject.strftime('%m-%d-%Y')
+    newFormat = datetimeobject.strftime('%m/%d/%Y')
     datum['date'] = newFormat
 
     noneType = str(datum['recovered'])
@@ -58,6 +58,10 @@ def index(request):
     listHosp = json.dumps(listHosp)
     listRec = json.dumps(listRec)
 
+    for i in range(0, len(data) - 1):
+        x = data[i]["recovered"] - data[i + 1]["recovered"]
+        data[i].update(recoveryIncrease = x)
+
     context = {
         'extremeNumbers': extremeNumbers,
         'cases': data,
@@ -85,4 +89,38 @@ def adv_metrics(request):
     return render(request, 'advance_metrics.html', context)
 
 def compare_by_state(request):
-     return render(request, 'advance_metrics.html')
+    text = ""
+    comparedData = []
+    diff = []
+    if request.method == "POST":
+        text = request.POST.get('dropdown', '')
+        comparedLink = "https://api.covidtracking.com/v1/states/" + text + "/daily.json"
+        comparedResp = requests.get(comparedLink)
+        comparedCont = comparedResp.content
+        comparedData = json.loads(comparedCont)
+
+        for datum in comparedData:
+            oldFormat = str(datum['date'])
+            datetimeobject = datetime.strptime(oldFormat, '%Y%m%d')
+            newFormat = datetimeobject.strftime('%m/%d/%Y')
+            datum['date'] = newFormat
+
+            noneType = str(datum['recovered'])
+            if(noneType == "None"):
+                datum['recovered'] = 0
+
+            noneTypeD = str(datum['death'])
+            if(noneTypeD == "None"):
+                datum['death'] = 0
+
+            noneTypeH = str(datum['hospitalizedCurrently'])
+            if(noneTypeH == "None"):
+                datum['hospitalizedCurrently'] = 0
+        diff.append(abs(data[0]["positive"] - comparedData[0]["positive"]))
+
+    context = {
+        'comparedData': comparedData,
+        'cases': data,
+        'differences': diff,
+    }
+    return render(request, 'compare_by_state.html', context)

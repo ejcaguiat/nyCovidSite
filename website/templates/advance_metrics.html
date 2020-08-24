@@ -9,6 +9,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3/dist/Chart.min.js"></script>
+    <title>NY Covid Tracker: Historical Metrics</title>
   </head>
   <body>
     <table class="table">
@@ -39,12 +40,10 @@
                 {% endif %}
               </td>
               <td>{{case.death}}
-                {% if case.hospInc > 0 %}                
-                <small style = "color:red;">↑{{case.hospInc}}</small>
-                {% elif case.hospInc < 0 %}
-                <small style = "color:green;">↓{{case.hospInc}}</small>
+                {% if case.deathIncrease > 0 %}                
+                <small style = "color:red;">↑{{case.deathIncrease}}</small>
                 {% else %}
-                <small style = "color:grey;">={{case.hospInc}}</small>
+                <small style = "color:grey;">={{case.deathIncrease}}</small>
                 {% endif %}
               </td>
               <td>{{case.hospitalizedCurrently}}
